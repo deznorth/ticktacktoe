@@ -220,5 +220,11 @@ namespace TickTackToe
                     return (char)(num + 97);
             }
         }
+
+        public int parseRowKey(char key)
+        {
+            return ((int)key-96);
+        }
+        
     }
 }
