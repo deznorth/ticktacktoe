@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace TickTackToe
 {
@@ -6,50 +7,163 @@ namespace TickTackToe
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            GameState state = new GameState();
             Board board = new Board();
+            Console.WriteLine("  TickTackToe!");
+            render(board);
             Console.ReadKey();
+        }
+
+        static void render(Board board)
+        {
+            Tools t = new Tools();
+            string[,] bValues = board.Values;
+
+            for(int i = -1; i<board.Rows; i++)
+            {
+                for(int j = -1; j<board.Cols; j++)
+                {
+                    if (i < 0)
+                    {
+                        if (j < 0)
+                        {
+                            Console.Write($" {t.getBoardRow(i)} ");
+                        }
+                        else
+                        {
+                            Console.Write($" {j + 1} ");
+                        }
+                    }
+                    else
+                    {
+                        if (j < 0)
+                        {
+                            Console.Write($" {t.getBoardRow(i)} ");
+                        }
+                        else
+                        {
+                            Console.Write(bValues[i,j]);
+                        }
+                    }
+                }
+                Console.Write("\n");
+            }
         }
     }
 
-    struct State //IMPORTANT! continue this.
+    class GameState //keeps track of the currentBoard and other game parameters
     {
-        //GameState - keeps track of the currentBoard and other game parameters
         private Board _currentBoard;
         private int _round;
         private int _currentPlayer;
         private bool _isGameOver;
-
-        //BoardState - keeps track of the content of each Box
-        private Box[][] _boxes;
-
-        private void gameInit()
+        
+        public GameState()
         {
             _currentBoard = new Board();
             _round = 1;
             _currentPlayer = 1;
             _isGameOver = false;
         }
+
+        public static void updateState(Board newBoard)
+        {
+
+        }
+
+        public static void updateState(int round, int nextPlayer)
+        {
+
+        }
+
+        public static void updateState(Board newBoard, int round, int nextPlayer)
+        {
+
+        }
+
+        public static void updateState(bool isGameOver)
+        {
+
+        }
+
+        public static void updateState(Board newBoard, int round, int nextPlayer, bool isGameOver)
+        {
+
+        }
+
+        //Getters and Setters
+        public int Round
+        {
+            get => _round;
+            set => _round = value;
+        }
+
+        public int CurrentPlayer
+        {
+            get => _currentPlayer;
+            set => _currentPlayer = value;
+        }
+
+        public bool IsGameOver
+        {
+            get => _isGameOver;
+            set => _isGameOver = value;
+        }
     }
 
-    struct Box
+    class BoardState //keeps track of the content of each Box
     {
-        private int _x, _y;
+        public string[,] _bContent;
+        private Dictionary<string, Box> _boxes;
+
+        public BoardState(Dictionary<string, Box> boxes, string[,] bContent)
+        {
+            _boxes = boxes;
+            _bContent = bContent;
+        }
+
+        
+
+    }
+
+    class Box
+    {
+        private int[] _position;
 
         public int[] position
         {
-            get => { _x, _y};
+            get => _position;
+            set => _position = value;
         }
+
+        public int x
+        {
+            get => _position[0];
+            set => _position[0] = value;
+        }
+
+        public int y
+        {
+            get => _position[1];
+            set => _position[1] = value;
+        }
+        
+
     }
 
     class Board
     {
+        private BoardState state;
         private int rows, cols;
 
         public Board(int rows = 3, int cols = 3)
         {
+            string[,] newBoard = createBoard(rows, cols);
+            Dictionary<string, Box> newIdentifier = createIdentifier(newBoard);
+
             this.rows = rows;
             this.cols = cols;
+            this.state = new BoardState(newIdentifier, newBoard);
         }
 
         public int Rows
@@ -62,6 +176,49 @@ namespace TickTackToe
         {
             get => cols;
             set => cols = value;
+        }
+
+        public string[,] Values
+        {
+            get => state._bContent;
+        }
+
+        private string[,] createBoard(int rows, int cols)
+        {
+            string[,] board = new string[rows,cols];
+
+            for(int i = 0; i<rows; i++)
+            {
+                for(int j = 0; j<cols; j++)
+                {
+                    board[i, j] = "[ ]";
+                }
+            }
+
+            return board;
+        }
+
+        private Dictionary<string, Box> createIdentifier(string[,] board)
+        {
+            Dictionary<string, Box> identifier = new Dictionary<string, Box>();
+
+
+
+            return identifier;
+        }
+    }
+
+    class Tools
+    {
+        public char getBoardRow(int num)
+        {
+            switch (num)
+            {
+                case -1:
+                    return ' ';
+                default:
+                    return (char)(num + 97);
+            }
         }
     }
 }
