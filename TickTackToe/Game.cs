@@ -114,7 +114,7 @@ namespace TickTackToe
 
     class BoardState //keeps track of the content of each Box
     {
-        public string[,] _bContent;
+        private string[,] _bContent;
         private Dictionary<string, Box> _boxes;
 
         public BoardState(Dictionary<string, Box> boxes, string[,] bContent)
@@ -123,7 +123,16 @@ namespace TickTackToe
             _bContent = bContent;
         }
 
+        public string[,] getBoxes()
+        {
+            return _bContent;
+        }     
         
+        public char getBox(string key) //Get content inside the specified box
+        {
+            string content = _bContent[_boxes[key].x, _boxes[key].y];
+            return content.ToCharArray()[1];
+        }
 
     }
 
@@ -171,7 +180,7 @@ namespace TickTackToe
         {
             string[,] newBoard = createBoard(rows, cols);
             Dictionary<string, Box> newIdentifier = createIdentifier(newBoard);
-
+            
             this.rows = rows;
             this.cols = cols;
             this.state = new BoardState(newIdentifier, newBoard);
@@ -189,9 +198,11 @@ namespace TickTackToe
             set => cols = value;
         }
 
+        
+
         public string[,] Values
         {
-            get => state._bContent;
+            get => state.getBoxes();
         }
 
         private string[,] createBoard(int rows, int cols)
@@ -223,7 +234,6 @@ namespace TickTackToe
                     identifier.Add(key, newBox);
                     //Console.WriteLine($"key:{key} - x:{identifier[key].x} - y:{identifier[key].y}");
                 }
-                Console.WriteLine();
             }
 
 
