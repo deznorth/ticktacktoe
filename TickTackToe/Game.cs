@@ -8,7 +8,7 @@ namespace TickTackToe
         static void Main(string[] args)
         {
             GameState state = new GameState();
-            Board board = new Board();
+            Board board = state.getBoard();
             Console.WriteLine("  TickTackToe!");
             render(board);
             Console.ReadKey();
@@ -16,7 +16,6 @@ namespace TickTackToe
 
         static void render(Board board)
         {
-            Tools t = new Tools();
             string[,] bValues = board.Values;
 
             for(int i = -1; i<board.Rows; i++)
@@ -27,7 +26,7 @@ namespace TickTackToe
                     {
                         if (j < 0)
                         {
-                            Console.Write($" {t.getBoardRow(i)} ");
+                            Console.Write($" {Tools.getBoardRow(i)} ");
                         }
                         else
                         {
@@ -38,7 +37,7 @@ namespace TickTackToe
                     {
                         if (j < 0)
                         {
-                            Console.Write($" {t.getBoardRow(i)} ");
+                            Console.Write($" {Tools.getBoardRow(i)} ");
                         }
                         else
                         {
@@ -65,6 +64,8 @@ namespace TickTackToe
             _currentPlayer = 1;
             _isGameOver = false;
         }
+
+        public Board getBoard() => _currentBoard;
 
         public static void updateState(Board newBoard)
         {
@@ -129,6 +130,16 @@ namespace TickTackToe
     class Box
     {
         private int[] _position;
+
+        public Box(int[] position)
+        {
+            _position = position;
+        }
+
+        public Box(int x, int y)
+        {
+            _position = new int[] { x, y };
+        }
 
         public int[] position
         {
@@ -202,6 +213,18 @@ namespace TickTackToe
         {
             Dictionary<string, Box> identifier = new Dictionary<string, Box>();
 
+            for(int i = 0; i<board.GetLength(0); i++)
+            {
+                for(int j = 0; j<board.GetLength(1); j++)
+                {
+                    string key = Tools.getBoardRow(i) + (j + 1).ToString();
+                    Box newBox = new Box(j, i);
+
+                    identifier.Add(key, newBox);
+                    //Console.WriteLine($"key:{key} - x:{identifier[key].x} - y:{identifier[key].y}");
+                }
+                Console.WriteLine();
+            }
 
 
             return identifier;
@@ -210,7 +233,7 @@ namespace TickTackToe
 
     class Tools
     {
-        public char getBoardRow(int num)
+        public static char getBoardRow(int num)
         {
             switch (num)
             {
@@ -221,7 +244,7 @@ namespace TickTackToe
             }
         }
 
-        public int parseRowKey(char key)
+        public static int parseRowKey(char key)
         {
             return ((int)key-96);
         }
