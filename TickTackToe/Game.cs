@@ -7,16 +7,19 @@ namespace TickTackToe
     {
         static void Main(string[] args)
         {
-            GameState state = new GameState();
-            Board board = state.getBoard();
+            Board Board = new Board();
+            int currentRound = 1;
+            int currentPlayer = 1;
+            bool isGameOver = false;
+
             Console.WriteLine("  TickTackToe!");
-            render(board);
+            render(Board);
             Console.ReadKey();
         }
 
         static void render(Board board)
         {
-            string[,] bValues = board.Values;
+            string[,] bValues = board.boxes;
 
             for(int i = -1; i<board.Rows; i++)
             {
@@ -48,92 +51,6 @@ namespace TickTackToe
                 Console.Write("\n");
             }
         }
-    }
-
-    class GameState //keeps track of the currentBoard and other game parameters
-    {
-        private Board _currentBoard;
-        private int _round;
-        private int _currentPlayer;
-        private bool _isGameOver;
-        
-        public GameState()
-        {
-            _currentBoard = new Board();
-            _round = 1;
-            _currentPlayer = 1;
-            _isGameOver = false;
-        }
-
-        public Board getBoard() => _currentBoard;
-
-        public static void updateState(Board newBoard)
-        {
-
-        }
-
-        public static void updateState(int round, int nextPlayer)
-        {
-
-        }
-
-        public static void updateState(Board newBoard, int round, int nextPlayer)
-        {
-
-        }
-
-        public static void updateState(bool isGameOver)
-        {
-
-        }
-
-        public static void updateState(Board newBoard, int round, int nextPlayer, bool isGameOver)
-        {
-
-        }
-
-        //Getters and Setters
-        public int Round
-        {
-            get => _round;
-            set => _round = value;
-        }
-
-        public int CurrentPlayer
-        {
-            get => _currentPlayer;
-            set => _currentPlayer = value;
-        }
-
-        public bool IsGameOver
-        {
-            get => _isGameOver;
-            set => _isGameOver = value;
-        }
-    }
-
-    class BoardState //keeps track of the content of each Box
-    {
-        private string[,] _bContent;
-        private Dictionary<string, Box> _boxes;
-
-        public BoardState(Dictionary<string, Box> boxes, string[,] bContent)
-        {
-            _boxes = boxes;
-            _bContent = bContent;
-        }
-
-        public string[,] getBoxes()
-        {
-            return _bContent;
-        }     
-        
-        public char getBox(string key) //Get content inside the specified box
-        {
-            string content = _bContent[_boxes[key].x, _boxes[key].y];
-            return content.ToCharArray()[1];
-        }
-
     }
 
     class Box
@@ -173,7 +90,8 @@ namespace TickTackToe
 
     class Board
     {
-        private BoardState state;
+        public string[,] boxes;
+        public Dictionary<string, Box> keyring;
         private int rows, cols;
 
         public Board(int rows = 3, int cols = 3)
@@ -183,7 +101,8 @@ namespace TickTackToe
             
             this.rows = rows;
             this.cols = cols;
-            this.state = new BoardState(newIdentifier, newBoard);
+            this.boxes = newBoard;
+            this.keyring = newIdentifier;
         }
 
         public int Rows
@@ -198,11 +117,10 @@ namespace TickTackToe
             set => cols = value;
         }
 
-        
-
-        public string[,] Values
+        public char getBox(string key) //Get content inside the specified box
         {
-            get => state.getBoxes();
+            string content = boxes[keyring[key].x, keyring[key].y];
+            return content.ToCharArray()[1];
         }
 
         private string[,] createBoard(int rows, int cols)
