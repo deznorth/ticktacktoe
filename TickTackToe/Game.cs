@@ -13,8 +13,9 @@ namespace TickTackToe
             int currentRound = 1;
             int currentPlayer = 1;
             bool isGameOver = false;
+            bool actionSuccess;
 
-            do
+            while (!isGameOver)
             {
                 Console.Clear();
                 Colorize.WriteLine(ConsoleColor.Green, "  TickTackToe!\n");
@@ -24,9 +25,13 @@ namespace TickTackToe
                 {
                     GameRenderer.DrawMessage(m.message);
                 }
-                pIO.execInput(pIO.prompt(), currentPlayer);
-                currentRound++;
-            } while (!isGameOver);
+                actionSuccess = pIO.execInput(pIO.prompt(), currentPlayer);
+                if (actionSuccess)
+                {
+                    currentRound++;
+                    currentPlayer = currentPlayer == 0 ? 1 : 0;
+                }
+            }
 
             Console.ReadKey();
         }

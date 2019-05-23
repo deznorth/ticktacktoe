@@ -21,7 +21,7 @@ namespace TickTackToe
             return (string)Console.ReadLine();
         }
 
-        public void execInput(string input, int currentPlayer)
+        public bool execInput(string input, int currentPlayer)
         {
             char playing = currentPlayer == 0 ? 'x' : 'o';
             string[] line = input.Split(' ');
@@ -35,16 +35,19 @@ namespace TickTackToe
             switch (command)
             {
                 case "play":
-                    //Insert play method here
-                    play(p, playing);
-                    break;
+                    if(p == "")
+                    {
+                        m.Send($"Try something like \"play a1\"", 'e');
+                        return false;
+                    }
+                    return play(p, playing);
                 default:
                     m.Send($"Command \"{command}\" does not exist.", 'e');
-                    break;
+                    return false;
             }
         }
 
-        private void play(string key, char playing)
+        private bool play(string key, char playing)
         {
             //Validate input
             int[] position = Tools.parseBoxKey(key);
@@ -52,10 +55,16 @@ namespace TickTackToe
             if(position[0]<0 || position[1] < 0)
             {
                 m.Send("The selected box does not exist.", 'e');
+                return false;
             }
             else
             {
-                b.updateBox(position, playing);
+                if(!b.updateBox(position, playing))
+                {
+                    m.Send("The selected box is not empty.", 'e');
+                    return false;
+                }
+                return true;
             }
         }
     }
