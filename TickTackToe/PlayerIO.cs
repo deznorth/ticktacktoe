@@ -6,29 +6,56 @@ namespace TickTackToe
 {
     class PlayerIO
     {
-        public static string prompt(int currentPlayer)
+        Messenger m;
+        Board b;
+
+        public PlayerIO(Messenger m, Board b)
         {
-            Console.Write("Input: ");
+            this.m = m;
+            this.b = b;
+        }
+
+        public string prompt()
+        {
+            Colorize.Write(ConsoleColor.Magenta, "Input: ");
             return (string)Console.ReadLine();
         }
 
-        public static void execInput(string input)
+        public void execInput(string input, int currentPlayer)
         {
+            char playing = currentPlayer == 0 ? 'x' : 'o';
             string[] line = input.Split(' ');
             string command = line[0];
+            string p = "";
             if (line.Length > 1)
             {
-                string p1 = line[1];
+                p = line[1];
             }
 
             switch (command)
             {
                 case "play":
                     //Insert play method here
+                    play(p, playing);
                     break;
                 default:
-                    Console.WriteLine($"Command \"{command}\" does not exist.");
+                    m.Send($"Command \"{command}\" does not exist.", 'e');
                     break;
+            }
+        }
+
+        private void play(string key, char playing)
+        {
+            //Validate input
+            int[] position = Tools.parseBoxKey(key);
+
+            if(position[0]<0 || position[1] < 0)
+            {
+                m.Send("The selected box does not exist.", 'e');
+            }
+            else
+            {
+                b.updateBox(position, playing);
             }
         }
     }

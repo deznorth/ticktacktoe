@@ -21,6 +21,20 @@ namespace TickTackToe
             this.keyring = newIdentifier;
         }
 
+        public void updateBox(int[] position, char value)
+        {
+            boxes[position[1], position[0]] = $"[{value}]";
+        }
+
+        public void checkBoard(char playing)
+        {
+
+        }
+
+        public void checkHorizontal(char playing) { }
+        public void checkVertical(char playing) { }
+        public void checkDiagonal(char playing) { }
+
         public int Rows
         {
             get => rows;
